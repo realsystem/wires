@@ -236,6 +236,13 @@ export function getAlternativeWireSizes(systemVoltage, current, wireLengthFeet, 
 export function generateInstallationGuidance(current, wireGauge, wireLengthFeet, systemVoltage, fuse) {
   const guidance = [];
 
+  // Critical: Pure copper wire requirement
+  guidance.push({
+    icon: '⚠️',
+    text: 'CRITICAL: Use only pure copper wire - NEVER use CCA (copper-clad aluminum) wire',
+    type: 'warning'
+  });
+
   // Wire type recommendation
   guidance.push({
     icon: '',

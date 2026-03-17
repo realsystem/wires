@@ -67,7 +67,16 @@ function App() {
 
       <footer className="app-footer">
         <p>Built for overlanders and off-road enthusiasts. All calculations based on NEC and ABYC standards.</p>
-        <p className="disclaimer">Always consult a professional electrician for complex installations. Improper wiring can cause fires.</p>
+        <p className="safety-warning">⚠️ Always consult a professional electrician for complex installations. Improper wiring can cause fires.</p>
+        <p className="disclaimer">
+          <strong>Disclaimer:</strong> This calculator is provided for informational purposes only.
+          While we strive for accuracy, we make no warranties or guarantees regarding the completeness,
+          reliability, or suitability of the calculations for any particular purpose. The user assumes
+          all risk and liability for the use of this tool. The developers and contributors shall not be
+          held liable for any damages, injuries, or losses arising from the use or misuse of this calculator.
+          Always verify calculations with a licensed professional electrician and follow all applicable
+          electrical codes and regulations.
+        </p>
       </footer>
     </div>
   );
