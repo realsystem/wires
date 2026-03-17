@@ -2,6 +2,8 @@
 
 ## Quick Start
 
+### Option 1: Local Development (npm)
+
 ```bash
 # Install dependencies
 npm install
@@ -14,6 +16,32 @@ npm run build      # Build for production to ./dist
 
 # Test
 npm test          # Run calculation tests
+```
+
+### Option 2: Docker (Recommended)
+
+```bash
+# Production mode (http://localhost:8080)
+make build         # Build production image
+make run           # Run production container
+
+# Development mode with hot reload (http://localhost:3000)
+make dev           # Run development container
+
+# Run tests in Docker
+make test
+
+# Stop containers
+make stop
+
+# View logs
+make logs          # Production logs
+make logs-dev      # Development logs
+
+# Quick commands
+make quick-prod    # Build and run production
+make quick-dev     # Run development immediately
+make rebuild       # Clean rebuild
 ```
 
 ## Deployment to overlandn.com/wires

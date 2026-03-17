@@ -18,6 +18,8 @@ Professional wire sizing calculator for RV, camper, and off-road electrical syst
 
 ## Quick Start
 
+### Option 1: Local Development
+
 ```bash
 # Install dependencies
 npm install
@@ -30,6 +32,23 @@ npm run build
 
 # Preview production build
 npm run preview
+```
+
+### Option 2: Docker (Recommended)
+
+```bash
+# Development mode with hot reload
+make dev           # http://localhost:3000
+
+# Production mode
+make build         # Build production image
+make run           # http://localhost:8080
+
+# Run tests
+make test
+
+# View all commands
+make help
 ```
 
 ## Deployment
