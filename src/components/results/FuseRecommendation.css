@@ -1,0 +1,120 @@
+/* Fuse Recommendation Component */
+
+.fuse-recommendation-card {
+}
+
+.fuse-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin: var(--spacing-xl) 0;
+}
+
+.fuse-badge {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  background: rgba(88, 166, 255, 0.15);
+  color: var(--color-info);
+  border: 2px solid var(--color-info);
+  border-radius: var(--radius-lg);
+}
+
+.fuse-label {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.fuse-sizing {
+  margin-bottom: var(--spacing-xl);
+}
+
+.fuse-sizing h4 {
+  font-size: var(--font-size-base);
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-secondary);
+}
+
+.sizing-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.sizing-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+.sizing-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.sizing-value {
+  font-size: var(--font-size-base);
+  font-family: var(--font-mono);
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.fuse-warnings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: rgba(227, 179, 65, 0.1);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--color-warning);
+}
+
+.warning-item {
+  font-size: var(--font-size-sm);
+  color: var(--color-warning);
+  margin: 0;
+}
+
+.fuse-error {
+  padding: var(--spacing-lg);
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--color-error);
+}
+
+.error-message {
+  font-size: var(--font-size-base);
+  color: var(--color-error);
+  margin-bottom: var(--spacing-md);
+  font-weight: 500;
+}
+
+.fuse-range {
+  padding: var(--spacing-md);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+.fuse-range p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-xs);
+  font-family: var(--font-mono);
+}
+
+.fuse-range p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .fuse-badge {
+    font-size: 2rem;
+    padding: var(--spacing-md) var(--spacing-xl);
+  }
+}

@@ -1,0 +1,107 @@
+/* Wire Recommendation Component */
+
+.wire-recommendation-card {
+  grid-column: 1 / -1;
+}
+
+.gauge-display {
+  display: flex;
+  justify-content: center;
+  margin: var(--spacing-xl) 0;
+}
+
+.gauge-badge {
+  font-size: 3rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  padding: var(--spacing-xl) var(--spacing-2xl);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.gauge-badge.success {
+  background: rgba(86, 211, 100, 0.15);
+  color: var(--color-success);
+  border: 2px solid var(--color-success);
+}
+
+.gauge-badge.warning {
+  background: rgba(227, 179, 65, 0.15);
+  color: var(--color-warning);
+  border: 2px solid var(--color-warning);
+}
+
+.recommendation-status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.recommendation-status p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.status-success {
+  color: var(--color-success);
+}
+
+.status-warning {
+  color: var(--color-warning);
+}
+
+.wire-specs {
+  margin-top: var(--spacing-lg);
+}
+
+.wire-specs h4 {
+  font-size: var(--font-size-base);
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-secondary);
+}
+
+.spec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+.spec-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.spec-value {
+  font-size: var(--font-size-base);
+  font-family: var(--font-mono);
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .gauge-badge {
+    font-size: 2rem;
+    padding: var(--spacing-lg) var(--spacing-xl);
+  }
+
+  .spec-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,97 @@
+/* Installation Guidance Component */
+
+.installation-guidance-card {
+  grid-column: 1 / -1;
+}
+
+.guidance-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+}
+
+.guidance-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.guidance-item:hover {
+  background: var(--color-bg-hover);
+  transform: translateX(4px);
+}
+
+.guidance-icon {
+  flex-shrink: 0;
+  font-size: var(--font-size-lg);
+  line-height: 1;
+}
+
+.guidance-text {
+  flex: 1;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.warnings-section {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--color-border);
+}
+
+.warnings-section h4 {
+  font-size: var(--font-size-base);
+  margin-bottom: var(--spacing-md);
+  color: var(--color-warning);
+}
+
+.guidance-list.warnings .guidance-item {
+  background: rgba(227, 179, 65, 0.1);
+  border-left: 3px solid var(--color-warning);
+}
+
+.guidance-item.warning .guidance-icon {
+  color: var(--color-warning);
+}
+
+.guidance-item.warning .guidance-text {
+  color: var(--color-warning);
+}
+
+.safety-note {
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--color-error);
+}
+
+.safety-note p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.safety-note strong {
+  color: var(--color-error);
+}
+
+@media (max-width: 768px) {
+  .guidance-item {
+    padding: var(--spacing-sm);
+  }
+
+  .guidance-icon {
+    font-size: var(--font-size-base);
+  }
+
+  .guidance-text {
+    font-size: var(--font-size-xs);
+  }
+}
