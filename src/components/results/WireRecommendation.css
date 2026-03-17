@@ -6,7 +6,9 @@
 
 .gauge-display {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
   margin: var(--spacing-xl) 0;
 }
 
@@ -16,6 +18,14 @@
   font-family: var(--font-mono);
   padding: var(--spacing-xl) var(--spacing-2xl);
   border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.wire-details {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
   text-align: center;
 }
 

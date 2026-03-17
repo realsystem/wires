@@ -13,6 +13,9 @@ const WireRecommendation = ({ recommendation, input }) => {
         <div className={`gauge-badge ${meetsRequirements ? 'success' : 'warning'}`}>
           {wireData.label}
         </div>
+        <p className="wire-details">
+          {wireData.diameter}" ({wireData.diameterMm}mm) • {ampacity}A rated • {wireData.resistance} Ω/1000ft
+        </p>
       </div>
 
       <div className="recommendation-status">
