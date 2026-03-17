@@ -16,7 +16,7 @@ const VoltageDropAnalysis = ({ recommendation, input }) => {
 
   return (
     <div className="card voltage-drop-card">
-      <h3>⚡ Voltage Drop Analysis</h3>
+      <h3>Voltage Drop Analysis</h3>
 
       <div className="drop-summary">
         <div className="drop-main">
@@ -64,16 +64,16 @@ const VoltageDropAnalysis = ({ recommendation, input }) => {
       </div>
 
       {status === 'success' && voltageDropPercent < 2 && (
-        <p className="drop-note success">✓ Excellent - minimal power loss</p>
+        <p className="drop-note success">Excellent - minimal power loss</p>
       )}
       {status === 'success' && voltageDropPercent >= 2 && voltageDropPercent <= 3 && (
-        <p className="drop-note success">✓ Good - acceptable for most applications</p>
+        <p className="drop-note success">Good - acceptable for most applications</p>
       )}
       {status === 'warning' && (
         <p className="drop-note warning">⚠️ Marginal - consider next size up for critical loads</p>
       )}
       {status === 'error' && (
-        <p className="drop-note error">❌ Exceeds limit - use recommended wire size</p>
+        <p className="drop-note error">⚠️ Exceeds limit - use recommended wire size</p>
       )}
     </div>
   );

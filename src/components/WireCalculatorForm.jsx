@@ -66,7 +66,7 @@ const WireCalculatorForm = ({ onCalculate }) => {
               onClick={() => handlePresetClick('ledLightBar')}
               title={USE_CASE_PRESETS.ledLightBar.description}
             >
-              💡 LED Light Bar
+              LED Light Bar
             </button>
             <button
               type="button"
@@ -74,7 +74,7 @@ const WireCalculatorForm = ({ onCalculate }) => {
               onClick={() => handlePresetClick('travelFridge')}
               title={USE_CASE_PRESETS.travelFridge.description}
             >
-              ❄️ Travel Fridge
+              Travel Fridge
             </button>
             <button
               type="button"
@@ -82,7 +82,7 @@ const WireCalculatorForm = ({ onCalculate }) => {
               onClick={() => handlePresetClick('winch')}
               title={USE_CASE_PRESETS.winch.description}
             >
-              ⚙️ Winch
+              Winch
             </button>
             <button
               type="button"
@@ -90,7 +90,7 @@ const WireCalculatorForm = ({ onCalculate }) => {
               onClick={() => handlePresetClick('solar')}
               title={USE_CASE_PRESETS.solar.description}
             >
-              ☀️ Solar Panel
+              Solar Panel
             </button>
             <button
               type="button"
@@ -98,7 +98,7 @@ const WireCalculatorForm = ({ onCalculate }) => {
               onClick={() => handlePresetClick('inverter')}
               title={USE_CASE_PRESETS.inverter.description}
             >
-              🔌 Inverter
+              Inverter
             </button>
             <button
               type="button"
@@ -106,7 +106,7 @@ const WireCalculatorForm = ({ onCalculate }) => {
               onClick={() => handlePresetClick('auxLights')}
               title={USE_CASE_PRESETS.auxLights.description}
             >
-              🔦 Aux Lights
+              Aux Lights
             </button>
           </div>
         </div>

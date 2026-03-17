@@ -7,7 +7,7 @@ const WireRecommendation = ({ recommendation, input }) => {
 
   return (
     <div className="card wire-recommendation-card">
-      <h3>🔌 Recommended Wire Gauge</h3>
+      <h3>Recommended Wire Gauge</h3>
 
       <div className="gauge-display">
         <div className={`gauge-badge ${meetsRequirements ? 'success' : 'warning'}`}>
@@ -18,8 +18,8 @@ const WireRecommendation = ({ recommendation, input }) => {
       <div className="recommendation-status">
         {meetsRequirements ? (
           <>
-            <p className="status-success">✓ Meets voltage drop requirement ({recommendation.voltageDropPercent.toFixed(1)}%)</p>
-            <p className="status-success">✓ Ampacity: {ampacity}A (Load: {input.current.toFixed(1)}A - {utilizationPercent}% capacity)</p>
+            <p className="status-success">Meets voltage drop requirement ({recommendation.voltageDropPercent.toFixed(1)}%)</p>
+            <p className="status-success">Ampacity: {ampacity}A (Load: {input.current.toFixed(1)}A - {utilizationPercent}% capacity)</p>
           </>
         ) : (
           <p className="status-warning">⚠️ See warnings above - consult professional</p>

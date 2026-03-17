@@ -6,7 +6,7 @@ const FuseRecommendation = ({ fuse }) => {
 
   return (
     <div className="card fuse-recommendation-card">
-      <h3>🛡️ Circuit Protection</h3>
+      <h3>Circuit Protection</h3>
 
       {recommended ? (
         <>
@@ -42,7 +42,7 @@ const FuseRecommendation = ({ fuse }) => {
         </>
       ) : (
         <div className="fuse-error">
-          <p className="error-message">❌ {warning}</p>
+          <p className="error-message">⚠️ {warning}</p>
           <div className="fuse-range">
             <p>Required fuse range: {min}A - {max}A</p>
             <p>No standard fuse size available</p>

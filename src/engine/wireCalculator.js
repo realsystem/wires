@@ -238,33 +238,33 @@ export function generateInstallationGuidance(current, wireGauge, wireLengthFeet,
 
   // Wire type recommendation
   guidance.push({
-    icon: '✓',
+    icon: '',
     text: 'Use marine-grade tinned copper wire for corrosion resistance'
   });
 
   // Fuse placement
   if (fuse && fuse.recommended) {
     guidance.push({
-      icon: '✓',
+      icon: '',
       text: `Install ${fuse.recommended}A fuse within 18" of battery positive terminal`
     });
   }
 
   // Terminal recommendations
   guidance.push({
-    icon: '✓',
+    icon: '',
     text: 'Use insulated ring terminals with heat-shrink adhesive liner'
   });
 
   // Wire protection
   guidance.push({
-    icon: '✓',
+    icon: '',
     text: 'Protect wire through firewall and sharp edges with grommets'
   });
 
   // Wire securing
   guidance.push({
-    icon: '✓',
+    icon: '',
     text: 'Secure wire every 18" with UV-resistant zip ties or clamps'
   });
 
@@ -296,7 +296,7 @@ export function generateInstallationGuidance(current, wireGauge, wireLengthFeet,
 
   // Grounding
   guidance.push({
-    icon: '✓',
+    icon: '',
     text: 'Use same gauge wire for both positive AND negative (ground) runs'
   });
 

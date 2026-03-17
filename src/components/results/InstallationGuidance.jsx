@@ -7,7 +7,7 @@ const InstallationGuidance = ({ guidance }) => {
 
   return (
     <div className="card installation-guidance-card">
-      <h3>🔧 Installation Best Practices</h3>
+      <h3>Installation Best Practices</h3>
 
       <div className="guidance-list">
         {regularGuidance.map((item, index) => (
