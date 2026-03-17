@@ -43,8 +43,8 @@ function App() {
           <div className="header-top">
             <a href="https://overlandn.com" className="back-to-main">← Back to main page</a>
           </div>
-          <h1>Offroad Wire Gauge Engineering Tool</h1>
-          <p className="tagline">Wire sizing for serious 4x4 builds and overlanding</p>
+          <h1>Wire Gauge Calculator</h1>
+          <p className="tagline">Professional wire sizing for RV, camper, and off-road electrical systems</p>
         </div>
       </header>
 
