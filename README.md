@@ -51,15 +51,6 @@ make test
 make help
 ```
 
-## Deployment
-
-Deploy to overlandn.com/wires:
-
-```bash
-# Build and deploy
-./deploy-overlandn.sh
-```
-
 ## Technology Stack
 
 - **React** 18 - UI framework
@@ -101,4 +92,4 @@ Optimized for common RV/off-road scenarios:
 
 ## License
 
-Private - Built for overlandn.com
+MIT
