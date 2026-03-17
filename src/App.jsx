@@ -17,6 +17,9 @@ function App() {
 
       setResults(specification);
 
+      // Scroll to top to show results
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
     } catch (err) {
       setError({
         type: 'calculation',
@@ -28,6 +31,9 @@ function App() {
   const handleReset = () => {
     setResults(null);
     setError(null);
+
+    // Scroll to top to show form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
