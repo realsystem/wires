@@ -26,7 +26,10 @@ const WireComparison = ({ alternatives, input }) => {
                 <td className={`drop-col ${alt.meetsVoltageDrop ? 'success' : 'fail'}`}>
                   {alt.voltageDropPercent.toFixed(1)}%
                 </td>
-                <td className={`ampacity-col ${alt.meetsAmpacity ? 'success' : 'fail'}`}>
+                <td
+                  className={`ampacity-col ${alt.meetsAmpacity ? 'success' : 'fail'}`}
+                  title={alt.meetsAmpacity ? undefined : 'Too close to the wire rating, or no standard fuse fits this wire at this load'}
+                >
                   {alt.ampacity}A
                 </td>
                 <td className="cost-col">

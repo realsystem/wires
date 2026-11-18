@@ -46,7 +46,7 @@ const WireRecommendation = ({ recommendation, input }) => {
           </div>
           <div className="spec-item">
             <span className="spec-label">Safe Max Current:</span>
-            <span className="spec-value">{maxSafeCurrent.toFixed(0)}A (80% derating)</span>
+            <span className="spec-value">{maxSafeCurrent.toFixed(0)}A ({input.loadDuty === 'intermittent' ? 'full rating, intermittent' : '80% derating'})</span>
           </div>
         </div>
       </div>
