@@ -3,8 +3,11 @@
  * Based on NEC Table 310.15(B)(16) and industry standards
  */
 
-// Copper wire resistance in ohms per 1000 feet at 75°C
-// Ampacity ratings for copper conductors in free air
+// Copper wire resistance in ohms per 1000 feet, approx. 20°C (68°F), uncoated copper.
+// Real wire runs hotter under load, so voltage drop is slightly optimistic when hot.
+// Ampacity: NEC Table 310.16 values for copper (raceway/cable, up to 3 current-carrying
+// conductors). 16 and 18 AWG are not NEC 310.16 sizes; their values are conservative
+// automotive-style estimates.
 export const AWG_COPPER_DATA = {
   '4/0': {
     resistance: 0.0500,
@@ -98,7 +101,7 @@ export const AWG_COPPER_DATA = {
   },
   '12': {
     resistance: 1.62,
-    ampacity60C: 25,
+    ampacity60C: 20,
     ampacity75C: 25,
     ampacity90C: 30,
     diameter: 0.081,
@@ -107,7 +110,7 @@ export const AWG_COPPER_DATA = {
   },
   '14': {
     resistance: 2.58,
-    ampacity60C: 20,
+    ampacity60C: 15,
     ampacity75C: 20,
     ampacity90C: 25,
     diameter: 0.064,
@@ -145,8 +148,18 @@ export const STANDARD_FUSE_SIZES = [
 ];
 
 // Temperature derating factors for ambient temperatures above 86°F (30°C)
-// Based on NEC Table 310.15(B)(2)(a)
+// Based on NEC Table 310.15(B)(2)(a). Each key is the UPPER bound (°F) of its band,
+// e.g. 95 covers 87-95°F. Look up the first key >= ambient temperature.
 export const TEMP_DERATING_FACTORS = {
+  60: { // 60°C rated wire
+    86: 1.00,
+    95: 0.91,
+    104: 0.82,
+    113: 0.71,
+    122: 0.58,
+    131: 0.41,
+    140: 0.00
+  },
   75: { // 75°C rated wire
     86: 1.00,
     95: 0.94,
@@ -200,7 +213,8 @@ export const USE_CASE_PRESETS = {
   },
   winch: {
     name: 'Electric Winch',
-    description: '9500lb winch (continuous rating)',
+    description: '9500lb winch (short bursts, not continuous)',
+    loadDuty: 'intermittent',
     voltage: 12,
     current: 200,
     wireLength: 8,
@@ -270,8 +284,8 @@ export const INSTALLATION_DERATING = {
   },
   'engine-bay': {
     name: 'Engine Bay',
-    factor: 0.7,
-    description: 'High temperature environment (150°F+)'
+    factor: 0.8,
+    description: 'Bundled in loom through a confined engine bay (set Ambient Temperature for the heat itself)'
   }
 };
 

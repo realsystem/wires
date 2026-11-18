@@ -14,6 +14,10 @@ RUN npm ci
 # Copy source code
 COPY . .
 
+# Optional: URL for the "Support this tool" button (baked in at build time)
+ARG SUPPORT_URL=""
+ENV SUPPORT_URL=$SUPPORT_URL
+
 # Build the application
 RUN npm run build
 

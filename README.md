@@ -86,7 +86,7 @@ Optimized for common RV/off-road scenarios:
 
 - Always consult a professional electrician for complex installations
 - Improper wiring can cause fires
-- Install fuses within 18" of battery
+- Install fuses as close to the battery as possible (ABYC E-11: within 7")
 - Use marine-grade tinned copper wire
 - Protect wires through sharp edges and high-heat areas
 

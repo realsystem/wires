@@ -2,7 +2,7 @@ import React from 'react';
 import './FuseRecommendation.css';
 
 const FuseRecommendation = ({ fuse }) => {
-  const { recommended, min, max, loadCurrent, wireAmpacity, warning } = fuse;
+  const { recommended, min, max, loadCurrent, wireAmpacity, warning, fuseRatio = 1.25 } = fuse;
 
   return (
     <div className="card fuse-recommendation-card">
@@ -25,8 +25,8 @@ const FuseRecommendation = ({ fuse }) => {
                 <span className="sizing-value">{loadCurrent.toFixed(1)}A</span>
               </div>
               <div className="sizing-item">
-                <span className="sizing-label">125% of Load:</span>
-                <span className="sizing-value">{min}A (continuous load rule)</span>
+                <span className="sizing-label">{Math.round(fuseRatio * 100)}% of Load:</span>
+                <span className="sizing-value">{min}A {fuseRatio > 1 ? '(continuous load rule)' : '(intermittent load)'}</span>
               </div>
               <div className="sizing-item">
                 <span className="sizing-label">Wire Ampacity:</span>
@@ -36,7 +36,7 @@ const FuseRecommendation = ({ fuse }) => {
           </div>
 
           <div className="fuse-warnings">
-            <p className="warning-item">⚠️ Install inline fuse within 18" of battery positive terminal</p>
+            <p className="warning-item">⚠️ Install the fuse as close to the battery positive terminal as possible (ABYC E-11: within 7")</p>
             <p className="warning-item">⚠️ Use marine-grade ANL or MRBF fuse for high current (&gt;50A)</p>
           </div>
         </>

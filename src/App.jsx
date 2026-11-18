@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import WireCalculatorForm from './components/WireCalculatorForm';
 import WireResultsDisplay from './components/WireResultsDisplay';
 import { calculateWireSpecification } from './engine/wireCalculator';
+import { APP_CONFIG } from './appConfig';
 import './styles/App.css';
 
 function App() {
@@ -66,6 +67,14 @@ function App() {
       </main>
 
       <footer className="app-footer">
+        <div className="support">
+          <p>If this tool was useful, consider supporting it.</p>
+          {APP_CONFIG.supportUrl ? (
+            <a className="btn btn-primary" href={APP_CONFIG.supportUrl} target="_blank" rel="noopener noreferrer">Support this tool</a>
+          ) : (
+            <button type="button" className="btn btn-primary" disabled title="Coming soon">Support this tool</button>
+          )}
+        </div>
         <p>Built for overlanders and off-road enthusiasts. All calculations based on NEC and ABYC standards.</p>
         <p className="safety-warning">⚠️ Always consult a professional electrician for complex installations. Improper wiring can cause fires.</p>
         <p className="disclaimer">

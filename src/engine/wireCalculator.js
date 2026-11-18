@@ -32,38 +32,42 @@ export function convertLength(length, fromUnit, toUnit) {
 }
 
 /**
- * Get temperature derating factor
+ * Get temperature derating factor.
+ * Table keys are the upper bound of each band, so use the first band that
+ * contains the ambient temperature (rounding up is the safe direction).
+ * Above the last band the wire cannot be used (factor 0).
  */
 function getTempDeratingFactor(ambientTempF, wireRating) {
-  const rating = wireRating === 90 ? 90 : 75;
+  const rating = [60, 75, 90].includes(wireRating) ? wireRating : 75;
   const factors = TEMP_DERATING_FACTORS[rating];
 
   if (ambientTempF <= 86) return 1.0;
 
-  // Find closest temperature in table
   const temps = Object.keys(factors).map(Number).sort((a, b) => a - b);
-  const closestTemp = temps.reduce((prev, curr) =>
-    Math.abs(curr - ambientTempF) < Math.abs(prev - ambientTempF) ? curr : prev
-  );
+  const band = temps.find(t => t >= ambientTempF);
+  return band === undefined ? 0 : factors[band];
+}
 
-  return factors[closestTemp];
+/** Continuous loads need 20% headroom; short-duty loads (winch) use the full rating. */
+export function getLoadFactors(loadDuty = 'continuous') {
+  return loadDuty === 'intermittent'
+    ? { maxLoadRatio: 1.0, fuseRatio: 1.0 }
+    : { maxLoadRatio: 0.8, fuseRatio: 1.25 };
 }
 
 /**
  * Get ampacity for a wire gauge with derating applied
  */
 export function getAmpacity(gauge, options = {}) {
-  const {
-    tempRating = 75,
-    ambientTemp = 77,
-    installMethod = 'free-air'
-  } = options;
+  const tempRating = Number(options.tempRating ?? 75);
+  const ambientTemp = Number(options.ambientTemp ?? 77);
+  const installMethod = options.installMethod ?? 'free-air';
 
   const wireData = AWG_COPPER_DATA[gauge];
   if (!wireData) return 0;
 
   // Get base ampacity for temperature rating
-  const baseAmpacity = wireData[`ampacity${tempRating}C`];
+  const baseAmpacity = wireData[`ampacity${tempRating}C`] ?? wireData.ampacity75C;
 
   // Apply temperature derating
   let derated = baseAmpacity;
@@ -102,10 +106,22 @@ export function calculateVoltageDrop(current, wireLengthFeet, wireGauge, options
 }
 
 /**
+ * Find the smallest standard fuse that protects the load (>= fuseRatio x load)
+ * without exceeding the wire's ampacity.
+ */
+function findFuse(current, ampacity, options = {}) {
+  const { fuseRatio } = getLoadFactors(options.loadDuty);
+  const min = Math.ceil(current * fuseRatio);
+  const recommended = STANDARD_FUSE_SIZES.find(size => size >= min && size <= ampacity);
+  return { min, max: ampacity, recommended: recommended ?? null };
+}
+
+/**
  * Recommend wire gauge based on requirements
  */
 export function recommendWireGauge(systemVoltage, current, wireLengthFeet, maxDropPercent, options = {}) {
   const maxDropVoltage = systemVoltage * (maxDropPercent / 100);
+  const { maxLoadRatio } = getLoadFactors(options.loadDuty);
 
   // Try each wire size from smallest to largest
   for (let i = AWG_SIZES_ORDERED.length - 1; i >= 0; i--) {
@@ -113,12 +129,14 @@ export function recommendWireGauge(systemVoltage, current, wireLengthFeet, maxDr
     const voltageDrop = calculateVoltageDrop(current, wireLengthFeet, gauge, options);
     const ampacity = getAmpacity(gauge, options);
 
-    // Wire must meet BOTH criteria:
+    // Wire must meet ALL criteria:
     // 1. Voltage drop within acceptable range
-    // 2. Current within 80% of ampacity (safety margin)
-    const maxSafeCurrent = ampacity * 0.8;
+    // 2. Current within the safe fraction of ampacity (80% continuous)
+    // 3. A standard fuse exists that protects both the load and the wire
+    const maxSafeCurrent = ampacity * maxLoadRatio;
+    const fuseFits = findFuse(current, ampacity, options).recommended !== null;
 
-    if (voltageDrop <= maxDropVoltage && current <= maxSafeCurrent) {
+    if (voltageDrop <= maxDropVoltage && current <= maxSafeCurrent && fuseFits) {
       return {
         gauge,
         voltageDrop,
@@ -142,7 +160,7 @@ export function recommendWireGauge(systemVoltage, current, wireLengthFeet, maxDr
     voltageDrop,
     voltageDropPercent: (voltageDrop / systemVoltage) * 100,
     ampacity,
-    maxSafeCurrent: ampacity * 0.8,
+    maxSafeCurrent: ampacity * maxLoadRatio,
     voltageAtLoad: systemVoltage - voltageDrop,
     powerLoss: voltageDrop * current,
     meetsRequirements: false,
@@ -156,29 +174,24 @@ export function recommendWireGauge(systemVoltage, current, wireLengthFeet, maxDr
  */
 export function recommendFuseSize(current, wireGauge, options = {}) {
   const ampacity = getAmpacity(wireGauge, options);
+  const { fuseRatio } = getLoadFactors(options.loadDuty);
+  const { min, max, recommended } = findFuse(current, ampacity, options);
 
-  // Minimum fuse: 125% of continuous load (NEC requirement)
-  const minFuse = Math.ceil(current * 1.25);
-
-  // Maximum fuse: Cannot exceed wire ampacity
-  const maxFuse = ampacity;
-
-  // Find smallest standard fuse size >= minFuse and <= maxFuse
-  const recommended = STANDARD_FUSE_SIZES.find(size => size >= minFuse && size <= maxFuse);
-
-  if (!recommended) {
+  if (recommended === null) {
     return {
       recommended: null,
-      min: minFuse,
-      max: maxFuse,
+      min,
+      max,
+      fuseRatio,
       warning: 'No standard fuse size fits requirements. Consult a professional electrician.'
     };
   }
 
   return {
     recommended,
-    min: minFuse,
-    max: maxFuse,
+    min,
+    max,
+    fuseRatio,
     loadCurrent: current,
     wireAmpacity: ampacity,
     warning: null
@@ -201,14 +214,15 @@ export function getAlternativeWireSizes(systemVoltage, current, wireLengthFeet, 
     const voltageDrop = calculateVoltageDrop(current, wireLengthFeet, gauge, options);
     const voltageDropPercent = (voltageDrop / systemVoltage) * 100;
     const ampacity = getAmpacity(gauge, options);
-    const maxSafeCurrent = ampacity * 0.8;
+    const maxSafeCurrent = ampacity * getLoadFactors(options.loadDuty).maxLoadRatio;
 
     const meetsVoltageDrop = voltageDropPercent <= maxDropPercent;
-    const meetsAmpacity = current <= maxSafeCurrent;
+    // Passing ampacity also means a standard fuse exists for this wire at this load
+    const meetsAmpacity = current <= maxSafeCurrent && findFuse(current, ampacity, options).recommended !== null;
 
-    // Rough cost factor (larger wire = more expensive)
+    // Rough cost factor: copper volume scales with cross-section (diameter squared)
     const wireData = AWG_COPPER_DATA[gauge];
-    const relativeCost = wireData.diameter / AWG_COPPER_DATA[recommendedGauge].diameter;
+    const relativeCost = (wireData.diameter / AWG_COPPER_DATA[recommendedGauge].diameter) ** 2;
 
     alternatives.push({
       gauge,
@@ -233,7 +247,7 @@ export function getAlternativeWireSizes(systemVoltage, current, wireLengthFeet, 
 /**
  * Generate installation guidance based on parameters
  */
-export function generateInstallationGuidance(current, wireGauge, wireLengthFeet, systemVoltage, fuse) {
+export function generateInstallationGuidance(current, wireGauge, wireLengthFeet, systemVoltage, fuse, loadDuty = 'continuous') {
   const guidance = [];
 
   // Critical: Pure copper wire requirement
@@ -253,7 +267,7 @@ export function generateInstallationGuidance(current, wireGauge, wireLengthFeet,
   if (fuse && fuse.recommended) {
     guidance.push({
       icon: '',
-      text: `Install ${fuse.recommended}A fuse within 18" of battery positive terminal`
+      text: `Install ${fuse.recommended}A fuse as close to the battery positive terminal as possible (ABYC E-11: within 7" of the source)`
     });
   }
 
@@ -274,6 +288,14 @@ export function generateInstallationGuidance(current, wireGauge, wireLengthFeet,
     icon: '',
     text: 'Secure wire every 18" with UV-resistant zip ties or clamps'
   });
+
+  if (loadDuty === 'intermittent') {
+    guidance.push({
+      icon: '⚠️',
+      text: 'Intermittent load: sized to the rated current. Stall or peak current (e.g. a winch) can be 2x or more - follow the manufacturer\'s cable and breaker specification.',
+      type: 'warning'
+    });
+  }
 
   // High current warnings
   if (current > 100) {
@@ -315,20 +337,28 @@ export function generateInstallationGuidance(current, wireGauge, wireLengthFeet,
  */
 export function calculateWireSpecification(input) {
   const {
-    systemVoltage,
-    current: inputCurrent,
-    watts,
-    wireLength,
     lengthUnit = 'ft',
     lengthType = 'one-way',
-    voltageDropPercent = 3,
-    tempRating = 75,
-    ambientTemp = 77,
-    installMethod = 'free-air'
+    installMethod = 'free-air',
+    loadDuty = 'continuous'
   } = input;
+
+  // Form fields (especially <select>) can arrive as strings
+  const systemVoltage = Number(input.systemVoltage);
+  const watts = input.watts ? Number(input.watts) : input.watts;
+  const inputCurrent = Number(input.current);
+  const wireLength = Number(input.wireLength);
+  const voltageDropPercent = Number(input.voltageDropPercent ?? 3);
+  const tempRating = Number(input.tempRating ?? 75);
+  const ambientTemp = Number(input.ambientTemp ?? 77);
 
   // Determine current
   const current = watts ? wattsToAmps(watts, systemVoltage) : inputCurrent;
+
+  if (!(systemVoltage > 0)) throw new Error('System voltage must be a positive number.');
+  if (!(current > 0)) throw new Error('Enter a current or power greater than zero.');
+  if (!(wireLength > 0)) throw new Error('Wire length must be greater than zero.');
+  if (!(voltageDropPercent > 0)) throw new Error('Acceptable voltage drop must be greater than zero.');
 
   // Convert length to feet for calculations
   const wireLengthFeet = lengthUnit === 'm' ? convertLength(wireLength, 'm', 'ft') : wireLength;
@@ -338,7 +368,8 @@ export function calculateWireSpecification(input) {
     lengthType,
     tempRating,
     ambientTemp,
-    installMethod
+    installMethod,
+    loadDuty
   };
 
   // Get wire recommendation
@@ -369,7 +400,8 @@ export function calculateWireSpecification(input) {
     recommendation.gauge,
     wireLengthFeet,
     systemVoltage,
-    fuse
+    fuse,
+    loadDuty
   );
 
   // Get wire data
@@ -387,7 +419,8 @@ export function calculateWireSpecification(input) {
       voltageDropPercent,
       tempRating,
       ambientTemp,
-      installMethod
+      installMethod,
+      loadDuty
     },
     recommendation: {
       ...recommendation,

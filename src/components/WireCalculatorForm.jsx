@@ -15,16 +15,20 @@ const WireCalculatorForm = ({ onCalculate }) => {
     // Advanced
     tempRating: 75,
     ambientTemp: 77,
-    installMethod: 'free-air'
+    installMethod: 'free-air',
+    loadDuty: 'continuous'
   });
 
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
+    const numeric = type === 'number' || type === 'range' || name === 'tempRating';
+    const parsed = parseFloat(value);
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'number' ? parseFloat(value) : value
+      // Keep an emptied number field as '' (not NaN) so it can be retyped
+      [name]: numeric ? (Number.isNaN(parsed) ? '' : parsed) : value
     }));
   };
 
@@ -39,7 +43,8 @@ const WireCalculatorForm = ({ onCalculate }) => {
       wireLength: preset.wireLength,
       lengthUnit: preset.unit,
       lengthType: preset.lengthType,
-      voltageDropPercent: preset.voltageDropPercent
+      voltageDropPercent: preset.voltageDropPercent,
+      loadDuty: preset.loadDuty || 'continuous'
     }));
   };
 
@@ -202,6 +207,28 @@ const WireCalculatorForm = ({ onCalculate }) => {
               </p>
             </div>
           )}
+
+          {/* Load Duty */}
+          <div className="form-group">
+            <label>Load Duty</label>
+            <div className="toggle-group">
+              <button
+                type="button"
+                className={`toggle-btn ${formData.loadDuty === 'continuous' ? 'active' : ''}`}
+                onClick={() => setFormData(prev => ({ ...prev, loadDuty: 'continuous' }))}
+              >
+                Continuous
+              </button>
+              <button
+                type="button"
+                className={`toggle-btn ${formData.loadDuty === 'intermittent' ? 'active' : ''}`}
+                onClick={() => setFormData(prev => ({ ...prev, loadDuty: 'intermittent' }))}
+              >
+                Intermittent
+              </button>
+            </div>
+            <p className="help-text">Intermittent = short bursts such as a winch. Continuous loads get 20% extra safety margin.</p>
+          </div>
 
           {/* Wire Length */}
           <div className="form-group">
